@@ -1,0 +1,25 @@
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+const Developer = new Schema(
+    {
+        name: { type: String, required: true },
+        last_name: { type: String, required: true },
+        email: { type: String, required: true },
+        password: { type: String, required: true },
+        country: { type: String, required: true },
+        city: { type: String, required: true },
+        state: { type: String, required: true },
+        date_birth: { type: Date, required: true },
+        phone_number: { type: String, required: true },
+        education_level: { type: String, required: true },
+        education_formation: { type: String, required: true },
+        english_level: { type: String, required: true },
+        experience_time: { type: String, required: true },
+        roles: { type: [String], required: true },
+        skills: { type: [String], required: true },
+    },
+    { timestamps: true },
+)
+
+module.exports = mongoose.model('developers', Developer)
