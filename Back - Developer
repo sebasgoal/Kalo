@@ -1,0 +1,137 @@
+const Developer = require('../models/developer-model')
+
+createDeveloper = (req, res) => {
+    const body = req.body
+
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a developer',
+        })
+    }
+
+    const developer = new Developer(body)
+
+    if (!developer) {
+        return res.status(400).json({ success: false, error: err })
+    }
+
+    developer
+        .save()
+        .then(() => {
+            return res.status(201).json({
+                success: true,
+                id: developer._id,
+                message: 'Developer created!',
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: 'Developer not created!',
+            })
+        })
+}
+
+updateDeveloper = async (req, res) => {
+    const body = req.body
+
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
+        })
+    }
+
+    Developer.findOne({ _id: req.params.id }, (err, developer) => {
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'Developer not found!',
+            })
+        }
+        developer.name = body.name
+        developer.last_name = body.last_name
+        developer.email = body.email
+        developer.password = body.password
+        developer.country = body.country
+        developer.city = body.city
+        developer.state = body.state
+        developer.date_birth = body.date_birth
+        developer.phone_number = body.phone_number
+        developer.education_level = body.education_level
+        developer.education_formation = body.education_formation
+        developer.english_level = body.english_level
+        developer.experience_time = body.experience_time
+        developer.roles = body.roles
+        developer.skills = body.skills
+        developer
+            .save()
+            .then(() => {
+                return res.status(200).json({
+                    success: true,
+                    id: developer._id,
+                    message: 'Developer updated!',
+                })
+            })
+            .catch(error => {
+                return res.status(404).json({
+                    error,
+                    message: 'Developer not updated!',
+                })
+            })
+    })
+}
+
+deleteDeveloper = async (req, res) => {
+    await Developer.findOneAndDelete({ _id: req.params.id }, (err, developer) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+
+        if (!developer) {
+            return res
+                .status(404)
+                .json({ success: false, error: `Developer not found` })
+        }
+
+        return res.status(200).json({ success: true, data: developer })
+    }).catch(err => console.log(err))
+}
+
+getDeveloperById = async (req, res) => {
+    await Developer.findOne({ _id: req.params.id }, (err, developer) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+
+        if (!developer) {
+            return res
+                .status(404)
+                .json({ success: false, error: `Developer not found` })
+        }
+        return res.status(200).json({ success: true, data: developer })
+    }).catch(err => console.log(err))
+}
+
+getDevelopers = async (req, res) => {
+    await Developer.find({}, (err, developers) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        if (!developers.length) {
+            return res
+                .status(404)
+                .json({ success: false, error: `Developer not found` })
+        }
+        return res.status(200).json({ success: true, data: developers })
+    }).catch(err => console.log(err))
+}
+
+module.exports = {
+    createDeveloper,
+    updateDeveloper,
+    deleteDeveloper,
+    getDevelopers,
+    getDeveloperById,
+}
