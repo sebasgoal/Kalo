@@ -1,0 +1,28 @@
+const Developer = require('../models/developer-model');
+const Company = require('../models/company-model');
+
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    let user = await Developer.findOne({ email, password });
+    let userType = 'developer';
+
+    if (!user) {
+      user = await Company.findOne({ email, password });
+      userType = 'company';
+    }
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'Invalid email or password' });
+    }
+
+    return res.status(200).json({ success: true, userType, data: user });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+module.exports = {
+  login,
+};
