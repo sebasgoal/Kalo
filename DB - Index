@@ -1,0 +1,14 @@
+const mongoose = require('mongoose')
+
+const mongoUrl = "mongodb+srv://juanansantiago2000:90CTa1mUAc3SfPpW@developers.y2efszd.mongodb.net/?retryWrites=true&w=majority"
+
+
+mongoose
+    .connect(mongoUrl, { useNewUrlParser: true })
+    .catch(e => {
+        console.error('Connection error', e.message)
+    })
+
+const db = mongoose.connection
+
+module.exports = db
